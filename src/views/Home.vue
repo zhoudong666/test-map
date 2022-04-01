@@ -56,15 +56,20 @@ export default {
         {
           type: 'map',
           map: 'china', // 使用 registerMap 注册的地图名称。
-          zoom: 1.2,
-          roam: true // 是否开启鼠标缩放和平移漫游。默认不开启
+          zoom: 1.6, // 当前视角的缩放比例。
+          roam: true, // 是否开启鼠标缩放和平移漫游。默认不开启
+          // // 自定义地区的名称映射，
+          // nameMap: {
+          //   China: '中国'
+          // }
+          label: { show: true } // 是否显示省市名称
         }
       ]
       this.mapChart.setOption(this.option)
 
       // 监听地图缩放事件
       this.mapChart.on('georoam', (params) => {
-        // console.log(params)
+        console.log(params)
         const moption = this.mapChart.getOption()
         console.log(moption)
         if (params.zoom) {
@@ -86,7 +91,7 @@ export default {
       })
       // geo设置可用
       // this.mapChart.on('geoselectchanged', (params) => {
-      //   console.log(params)
+      //   console.log('geoselectchanged', params)
       // })
 
       // 省级地图
