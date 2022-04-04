@@ -3,10 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-Vue.config.productionTip = false
-
 var echarts = require('echarts')
-Vue.prototype.$echart = echarts
+// import echarts from '@/plugins/echarts.js'
+
+Vue.config.productionTip = false
+Vue.prototype.$echarts = echarts
 new Vue({
   router,
   store,

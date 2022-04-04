@@ -1,45 +1,39 @@
 <template>
   <div class="line-container">
-    <p>点击省份可以跳转到省级地图(省级数据只有青海和内蒙古,点击其他省份展示重复数据)</p>
+    <!-- <p>点击省份可以跳转到省级地图(省级数据只有青海和内蒙古,点击其他省份展示重复数据)</p>
     <p>点击市可以跳转到市级地图(市数据只有锡林郭勒)市数据有颜色块区分</p>
-    <p>点击地图空白处回到上一级地图</p>
-    <div>
+    <p>点击地图空白处回到上一级地图</p> -->
+    <div style="display: flex">
       <div id="mapChart"></div>
+      <div id="provinceChart"></div>
     </div>
   </div>
 </template>
 
 <script>
-import chinaJson from '@/utils/map/china.json' // json数据引入
-import qinghai from '@/utils/map/qinghai.json'
-import neimenggu from '@/utils/map/neimenggu.json'
-import xilinguole from '@/utils/map/xilinguole.json'
+import chinaJson from '@/utils/map/china2.json' // json数据引入
 
+import axios from 'axios'
 export default {
-  name: 'mapChart',
+  name: 'mapChina',
   data() {
     return {
       option: {
-        title: {
-          text: '中国地图',
-          subtext: '鼠标缩放比例大于2.5展示名称'
-        },
-        tooltip: {
-          trigger: 'item'
-        },
+        // title: { text: '中国地图'  subtext: '鼠标缩放比例大于2.5展示名称'  },
+        tooltip: { trigger: 'item' },
         visualMap: {
           min: 1,
-          max: 50,
+          max: 1000,
           text: ['High', 'Low'],
-          realtime: false,
+          realtime: true,
           calculable: true,
           inRange: {
-            color: ['lightskyblue', 'yellow', 'orangered']
+            color: ['#4c77da', '#3436b7']
           }
         }
       },
       mapChart: '',
-      level: 1
+      provinceChart: ''
     }
   },
   created() {},
@@ -47,167 +41,114 @@ export default {
     this.getMapChart()
   },
   methods: {
+    renderProvinceChart(params) {
+      this.provinceChart = this.provinceChart || this.$echarts.init(document.getElementById('provinceChart'))
+      axios.get(`static/province/${params.name}.geoJson`).then(
+        (res) => {
+          this.$echarts.registerMap('province', res.data)
+          var option = {
+            tooltip: { trigger: 'item' },
+            visualMap: {
+              min: 1,
+              max: 1000,
+              text: ['High', 'Low'],
+              realtime: true,
+              calculable: true,
+              inRange: { color: ['#ff0000', '#00ff00'] }
+            },
+            series: [{ type: 'map', map: 'province', label: { show: true } }]
+          }
+          this.provinceChart.setOption(option)
+        },
+        (err) => {
+          console.log('err', err)
+        }
+      )
+    },
     // echarts初始化
-    getMapChart() {
-      this.mapChart = this.$echart.init(document.getElementById('mapChart'))
-      this.$echart.registerMap('china', chinaJson)
-
+    async getMapChart() {
+      this.mapChart = this.$echarts.init(document.getElementById('mapChart'))
+      this.$echarts.registerMap('china', chinaJson)
       this.option.series = [
         {
           type: 'map',
+          name: '所发生的',
           map: 'china', // 使用 registerMap 注册的地图名称。
-          zoom: 1.6, // 当前视角的缩放比例。
-          roam: true, // 是否开启鼠标缩放和平移漫游。默认不开启
-          // // 自定义地区的名称映射，
-          // nameMap: {
-          //   China: '中国'
-          // }
-          label: { show: true } // 是否显示省市名称
+          zoom: 1.25, // 当前视角的缩放比例。
+          roam: false, // 是否开启鼠标缩放和平移漫游。默认不开启
+          // nameMap: { China: '中国' }, // 自定义地区的名称映射，
+          label: { show: false }, // 是否显示省市名称
+          // center: [118.27958, 31.117566],  // 中心点(经纬度)
+          // 鼠标划过区块的样式 颜色
+          emphasis: {
+            areaColor: '#0f0',
+            label: { color: '#fff' }
+          },
+          data: [
+            {
+              name: '北京市',
+              value: Math.round(Math.random() * 1000),
+              emphasis: { itemStyle: { areaColor: 'red' } }
+            },
+            { name: '天津市', value: Math.round(Math.random() * 1000) },
+            { name: '上海市', value: Math.round(Math.random() * 1000) },
+            { name: '重庆市', value: Math.round(Math.random() * 1000) },
+            { name: '河北省', value: Math.round(Math.random() * 1000) },
+            { name: '河南省', value: Math.round(Math.random() * 1000) },
+            { name: '云南省', value: Math.round(Math.random() * 1000) },
+            { name: '辽宁省', value: Math.round(Math.random() * 1000) },
+            { name: '黑龙江省', value: Math.round(Math.random() * 1000) },
+            { name: '湖南省', value: Math.round(Math.random() * 1000) },
+            { name: '安徽省', value: Math.round(Math.random() * 1000) },
+            { name: '山东省', value: Math.round(Math.random() * 1000) },
+            { name: '新疆维吾尔自治区', value: Math.round(Math.random() * 1000) },
+            { name: '江苏省', value: Math.round(Math.random() * 1000) },
+            { name: '浙江省', value: Math.round(Math.random() * 1000) },
+            { name: '江西省', value: Math.round(Math.random() * 1000) },
+            { name: '湖北省', value: Math.round(Math.random() * 1000) },
+            { name: '广西壮族自治区', value: Math.round(Math.random() * 1000) },
+            { name: '甘肃省', value: Math.round(Math.random() * 1000) },
+            { name: '山西省', value: Math.round(Math.random() * 1000) },
+            { name: '内蒙古自治区', value: Math.round(Math.random() * 1000) },
+            { name: '陕西省', value: Math.round(Math.random() * 1000) },
+            { name: '吉林省', value: Math.round(Math.random() * 1000) },
+            { name: '福建省', value: Math.round(Math.random() * 1000) },
+            { name: '贵州省', value: Math.round(Math.random() * 1000) },
+            { name: '广东省', value: Math.round(Math.random() * 1000) },
+            { name: '青海省', value: Math.round(Math.random() * 1000) },
+            { name: '西藏自治区', value: Math.round(Math.random() * 1000) },
+            { name: '四川省', value: Math.round(Math.random() * 1000) },
+            { name: '宁夏回族自治区', value: Math.round(Math.random() * 1000) },
+            { name: '海南省', value: Math.round(Math.random() * 1000) },
+            { name: '台湾省', value: Math.round(Math.random() * 1000) },
+            { name: '香港特别行政区', value: Math.round(Math.random() * 1000) },
+            { name: '澳门特别行政区', value: Math.round(Math.random() * 1000) }
+          ]
         }
       ]
       this.mapChart.setOption(this.option)
-
-      // 监听地图缩放事件
-      this.mapChart.on('georoam', (params) => {
-        console.log(params)
-        const moption = this.mapChart.getOption()
-        console.log(moption)
-        if (params.zoom) {
-          // 缩放事件
-          const zoom = moption.series[0].zoom
-          this.option.series[0].zoom = zoom
-          if (zoom > 2.5) {
-            this.option.series[0].label = {
-              show: true
-            }
-            this.mapChart.setOption(this.option)
-          } else {
-            this.option.series[0].label = {
-              show: false
-            }
-            this.mapChart.setOption(this.option)
-          }
-        }
-      })
-      // geo设置可用
-      // this.mapChart.on('geoselectchanged', (params) => {
-      //   console.log('geoselectchanged', params)
-      // })
-
-      // 省级地图
-      const provinceName = {
-        青海省: qinghai,
-        内蒙古自治区: neimenggu
-      }
-      // 市级地图
-      const cityName = {
-        锡林郭勒盟: xilinguole
-      }
-
-      // 获取地图数据
-      const map = this.getMap()
-
       // 点击地图省份
       this.mapChart.on('click', (params) => {
-        console.log(params)
-        let mapData = qinghai
-        if (this.level === 1) {
-          if (provinceName[params.name]) {
-            mapData = provinceName[params.name]
-          }
-          this.level = 2
-          this.$echart.registerMap('province', mapData)
-        } else if (this.level === 2) {
-          mapData = cityName['锡林郭勒盟']
-          this.level = 3
-          this.$echart.registerMap('city', mapData)
-        }
-        this.option.series = map[this.level]
-        this.mapChart.setOption(this.option)
+        console.log(params.name)
+        if (params.name === '南海诸岛') return
+        this.renderProvinceChart(params)
       })
-      // 点击所有地方触发
-      this.mapChart.getZr().on('click', (event) => {
-        // 该监听器正在监听一个`zrender 事件`。
-        console.log(event.target, this.level)
-        // 点击空白处回到上一级
-        if (!event.target && this.level !== 1) {
-          if (this.level === 2) {
-            this.option.series = [
-              {
-                type: 'map',
-                map: 'china',
-                label: {
-                  show: false
-                },
-                zoom: 1.2,
-                roam: true
-              }
-            ]
-            this.level = 1
-          } else if (this.level === 3) {
-            this.option.series = map[2]
-            this.level = 2
-          }
 
-          this.mapChart.setOption(this.option)
-        }
+      this.mapChart.dispatchAction({
+        // 高亮指定的数据图形。
+        // 通过seriesName或者seriesIndex指定系列。如果要再指定某个数据可以再指定dataIndex或者name。
+        type: 'highlight',
+        // seriesIndex: 0,
+        name: '北京市'
       })
-    },
-
-    // 获取地图数据
-    getMap() {
-      const visualData = [
-        // 锡林郭勒盟映射数据,可以自己增加额外属性
-        { name: '东乌珠穆沁旗', value: 100, level: 3 },
-        { name: '西乌珠穆沁旗', value: 500, level: 3 },
-        { name: '锡林浩特市', value: 1100, level: 3 },
-        { name: '阿巴嘎旗', value: 3300, level: 3 },
-        { name: '正蓝旗', value: 900 },
-        { name: '多伦县', value: 350 },
-        { name: '正镶白旗', value: 2100 },
-        { name: '太仆寺旗', value: 1900 },
-        { name: '苏尼特左旗', value: 4500 },
-        { name: '苏尼特右旗', value: 2800 },
-        { name: '二连浩特市', value: 3560 },
-        { name: '镶黄旗', value: 789 }
-      ]
-      const map = {
-        2: [
-          {
-            type: 'map',
-            map: 'province',
-            label: {
-              show: true
-            },
-            itemStyle: {
-              areaColor: '#f1b290'
-            },
-            zoom: 1,
-            roam: true
-          }
-        ],
-        3: [
-          {
-            type: 'map',
-            map: 'city',
-            name: '降雨量',
-            label: {
-              show: true
-            },
-            zoom: 1,
-            roam: true,
-            data: visualData // 设置视觉映射数据
-          }
-        ]
-      }
-      return map
     }
   }
 }
 </script>
 
 <style>
-#mapChart {
+#mapChart,
+#provinceChart {
   width: 800px;
   height: 500px;
   border: 1px solid red;
