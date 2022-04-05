@@ -43,27 +43,22 @@ export default {
   methods: {
     renderProvinceChart(params) {
       this.provinceChart = this.provinceChart || this.$echarts.init(document.getElementById('provinceChart'))
-      axios.get(`static/province/${params.name}.geoJson`).then(
-        (res) => {
-          this.$echarts.registerMap('province', res.data)
-          var option = {
-            tooltip: { trigger: 'item' },
-            visualMap: {
-              min: 1,
-              max: 1000,
-              text: ['High', 'Low'],
-              realtime: true,
-              calculable: true,
-              inRange: { color: ['#ff0000', '#00ff00'] }
-            },
-            series: [{ type: 'map', map: 'province', label: { show: true } }]
-          }
-          this.provinceChart.setOption(option)
-        },
-        (err) => {
-          console.log('err', err)
+      axios.get(`static/province/${params.name}.geoJson`).then((res) => {
+        this.$echarts.registerMap('province', res.data)
+        var option = {
+          tooltip: { trigger: 'item' },
+          visualMap: {
+            min: 1,
+            max: 1000,
+            text: ['High', 'Low'],
+            realtime: true,
+            calculable: true,
+            inRange: { color: ['#ff0000', '#00ff00'] }
+          },
+          series: [{ type: 'map', map: 'province', label: { show: true } }]
         }
-      )
+        this.provinceChart.setOption(option)
+      })
     },
     // echarts初始化
     async getMapChart() {
@@ -77,13 +72,14 @@ export default {
           zoom: 1.25, // 当前视角的缩放比例。
           roam: false, // 是否开启鼠标缩放和平移漫游。默认不开启
           // nameMap: { China: '中国' }, // 自定义地区的名称映射，
-          label: { show: false }, // 是否显示省市名称
           // center: [118.27958, 31.117566],  // 中心点(经纬度)
           // 鼠标划过区块的样式 颜色
           emphasis: {
             areaColor: '#0f0',
             label: { color: '#fff' }
           },
+          // 是否显示省市名称
+          label: { show: false, color: '#fff' },
           data: [
             {
               name: '北京市',
@@ -129,7 +125,7 @@ export default {
       this.mapChart.setOption(this.option)
       // 点击地图省份
       this.mapChart.on('click', (params) => {
-        console.log(params.name)
+        // console.log(params.name)
         if (params.name === '南海诸岛') return
         this.renderProvinceChart(params)
       })

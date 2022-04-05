@@ -58,7 +58,7 @@ export default {
           type: 'map',
           map: 'china',
           zoom: 1.6,
-          roam: false,
+          roam: true,
           label: {
             show: true
           }
@@ -68,7 +68,6 @@ export default {
 
       // 监听地图缩放事件
       this.mapChart.on('georoam', (params) => {
-        // console.log(params)
         const moption = this.mapChart.getOption()
         console.log(moption)
         if (params.zoom) {
