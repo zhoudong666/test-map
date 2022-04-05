@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       option: {
+        backgroundColor: '#000F32',
         // title: { text: '中国地图'  subtext: '鼠标缩放比例大于2.5展示名称'  },
         tooltip: { trigger: 'item' },
         visualMap: {
