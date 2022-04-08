@@ -7,6 +7,7 @@
       <div id="mapChart"></div>
       <div id="provinceChart"></div>
     </div>
+    <svg-icon icon-class="download" style="font-size: 40px; color: red"></svg-icon>
   </div>
 </template>
 

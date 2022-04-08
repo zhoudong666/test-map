@@ -1,0 +1,8 @@
+<svg class="count-circle" style="width:10em;height:10em;" viewBox="0 0 100 100">
+  <circle cx="60" cy="50" r="30" stroke="#fff" stroke-width="2" fill="none" />
+  <circle cx="60" cy="36" r="2" stroke="#fff" stroke-width="2" fill="#fff" />
+  <rect x="45" y="40" width="30" height="3" style="fill:#fff;stroke-width:1;stroke:#fff" />
+  <rect x="55" y="40" width="2" height="26" style="fill:#fff;stroke-width:1;stroke:#fff" />
+  <rect x="63" y="40" width="2" height="26" style="fill:#fff;stroke-width:1;stroke:#fff" />
+  <rect x="55" y="40" width="8" height="16" style="fill:#fff;stroke-width:1;stroke:#fff" />
+</svg>
