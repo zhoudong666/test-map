@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import chinaJson from '@/utils/map/china2.json' // json数据引入
+import chinaJson from '@/utils/map/china.json' // json数据引入
 
 import axios from 'axios'
 export default {
@@ -31,6 +31,27 @@ export default {
           calculable: true,
           inRange: {
             color: ['#4c77da', '#3436b7']
+          },
+          seriesIndex: 0
+        },
+        geo: {
+          map: 'china',
+          zoom: 1.2,
+          roam: true,
+          seriesIndex: 0,
+
+          // nameMap: { China: '中国' }, // 自定义地区的名称映射，
+          center: [103.948024, 35.263161], // 中心点(经纬度)
+          // 鼠标划过区块的样式 颜色
+          emphasis: {
+            areaColor: '#0f0',
+            label: { color: '#fff' }
+          },
+          // 是否显示省市名称
+          label: { show: false, color: '#fff' },
+          itemStyle: {
+            areaColor: '#4474ec',
+            borderColor: '#fff'
           }
         }
       },
@@ -55,9 +76,61 @@ export default {
             text: ['High', 'Low'],
             realtime: true,
             calculable: true,
-            inRange: { color: ['#ff0000', '#00ff00'] }
+            inRange: { color: ['#ff0000', '#00ff00'] },
+            seriesIndex: 0
           },
-          series: [{ type: 'map', map: 'province', label: { show: true } }]
+          geo: {
+            map: 'province',
+            zoom: 1.2,
+            roam: true,
+            seriesIndex: 1,
+            itemStyle: {
+              areaColor: '#4474ec',
+              borderColor: '#fff'
+            },
+            label: {
+              show: true
+            },
+            emphasis: {
+              label: {
+                // show: false
+              },
+              itemStyle: {
+                areaColor: '#4474ec'
+              }
+            }
+          },
+          series: [
+            { type: 'map', map: 'province', geoIndex: 0, label: { show: true } },
+            {
+              // 涟漪效果
+              name: 'Top 6',
+              type: 'effectScatter',
+              coordinateSystem: 'geo',
+              geoIndex: 0,
+              symbol:
+                'path://M937.472 404.864A450.496 450.496 0 0 0 494.72 74.016c473.376 229.728 260.416 555.52 260.416 555.52l-274.272-277.408 105.024-113.376-72.192-66.464-56.896 50.56-106.496-1.44-215.168 218.144 131.2 117.728 81.664-78.016 280.096 269.472c-238.496 154.56-455.136-99.712-455.136-99.712l-85.344 73.6 64.928 75.136-10.944 15.168a51.584 51.584 0 0 0-43.04 10.816c-74.4 71.52 15.328 110.528 15.328 110.528 86.784 19.488 83.2-70.08 83.2-70.08l16-20.224c326.784 174.816 520.064 18.048 520.064 18.048l94.112 87.424 128.384-127.136-83.904-90.304c-0.704 0 113.792-166.848 65.664-327.232"',
+              data: [
+                {
+                  name: '连云港市',
+                  value: [119.178821, 34.600018, 14500]
+                }
+              ],
+              symbolSize: 30,
+              // symbolSize: function (val) {
+              //   return val[2] / 200;
+              // },
+              encode: {
+                value: 2
+              },
+              itemStyle: {
+                shadowBlur: 10,
+                shadowColor: 'rgba(230, 10, 10, 1)',
+                color: '#ff3040'
+              },
+              zlevel: 1
+            }
+          ]
         }
         this.provinceChart.setOption(option)
       })
@@ -70,24 +143,13 @@ export default {
         {
           type: 'map',
           name: '所发生的',
+          // geoIndex 指定geo属性后，series-map.map 属性，以及 series-map.itemStyle 等样式
+          // 配置不再起作用，而是采用 geo 中的相应属性。
+          geoIndex: 0,
           map: 'china', // 使用 registerMap 注册的地图名称。
-          zoom: 1.25, // 当前视角的缩放比例。
-          roam: false, // 是否开启鼠标缩放和平移漫游。默认不开启
-          // nameMap: { China: '中国' }, // 自定义地区的名称映射，
-          // center: [118.27958, 31.117566],  // 中心点(经纬度)
-          // 鼠标划过区块的样式 颜色
-          emphasis: {
-            areaColor: '#0f0',
-            label: { color: '#fff' }
-          },
-          // 是否显示省市名称
-          label: { show: false, color: '#fff' },
+          selectedMode: false, // 是否开启选中效果,默认开启
           data: [
-            {
-              name: '北京市',
-              value: Math.round(Math.random() * 1000),
-              emphasis: { itemStyle: { areaColor: 'red' } }
-            },
+            { name: '北京市', value: Math.round(Math.random() * 1000) },
             { name: '天津市', value: Math.round(Math.random() * 1000) },
             { name: '上海市', value: Math.round(Math.random() * 1000) },
             { name: '重庆市', value: Math.round(Math.random() * 1000) },
@@ -122,6 +184,52 @@ export default {
             { name: '香港特别行政区', value: Math.round(Math.random() * 1000) },
             { name: '澳门特别行政区', value: Math.round(Math.random() * 1000) }
           ]
+        },
+        // {
+        //   name: '企业分布', // 红色标注
+        //   type: 'custom',
+        //   coordinateSystem: 'geo',
+        //   clickable: true,
+        //   data: [{ name: '江苏省', value: [118.767413, 32.041544, 100] }],
+        //   renderItem: function (params, api) {
+        //     console.log(params, api)
+        //     return {
+        //       type: 'image',
+        //       name: 'aaa',
+        //       style: {
+        //         image: require('@/assets/icon_mark.png'), // 标注点图标
+        //         width: 14,
+        //         height: 18,
+        //         x: 118.767413,
+        //         y: 32.041544
+        //         // x: api.coord([markList[params.dataIndex].value[0], markList[params.dataIndex].value[1]])[0],
+        //         // y: api.coord([markList[params.dataIndex].value[0], markList[params.dataIndex].value[1]])[1]
+        //       }
+        //     }
+        //   }
+        // },
+        {
+          name: 'Top 6',
+          type: 'scatter',
+          geoIndex: 0,
+          // tooltip: { show: false },
+          symbol22:
+            'path://M937.472 404.864A450.496 450.496 0 0 0 494.72 74.016c473.376 229.728 260.416 555.52 260.416 555.52l-274.272-277.408 105.024-113.376-72.192-66.464-56.896 50.56-106.496-1.44-215.168 218.144 131.2 117.728 81.664-78.016 280.096 269.472c-238.496 154.56-455.136-99.712-455.136-99.712l-85.344 73.6 64.928 75.136-10.944 15.168a51.584 51.584 0 0 0-43.04 10.816c-74.4 71.52 15.328 110.528 15.328 110.528 86.784 19.488 83.2-70.08 83.2-70.08l16-20.224c326.784 174.816 520.064 18.048 520.064 18.048l94.112 87.424 128.384-127.136-83.904-90.304c-0.704 0 113.792-166.848 65.664-327.232"',
+          symbol: 'pin',
+          coordinateSystem: 'geo',
+          data: [{ name: '江苏省', value: [118.767413, 32.041544, 1000] }],
+          symbolSize: 20,
+          label: {
+            formatter: '{b}',
+            position: 'right',
+            show: false
+          },
+          itemStyle: {
+            shadowBlur: 10,
+            shadowColor: 'rgba(230, 10, 10, 1)',
+            color: 'red'
+          },
+          zlevel: 1
         }
       ]
       this.mapChart.setOption(this.option)

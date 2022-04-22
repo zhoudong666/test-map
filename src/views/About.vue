@@ -61,7 +61,8 @@ export default {
           roam: true,
           label: {
             show: true
-          }
+          },
+          center: [103.948024, 35.263161] // 中心点(经纬度)
         }
       ]
       this.mapChart.setOption(this.option)

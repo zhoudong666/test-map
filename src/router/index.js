@@ -32,6 +32,11 @@ const routes = [
     path: '/pieChart',
     name: 'pieChart',
     component: () => import('../views/pieChart.vue')
+  },
+  {
+    path: '/gaugeChart',
+    name: 'gaugeChart',
+    component: () => import('../views/gaugeChart.vue')
   }
 ]
 

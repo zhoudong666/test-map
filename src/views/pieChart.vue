@@ -27,6 +27,7 @@ export default {
 
       const option = {
         tooltip: {
+          show: false,
           trigger: 'item',
           formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
@@ -62,7 +63,10 @@ export default {
           align: 'left', // 文字位置
           itemHeight: 16, // 每个图例的宽度
           itemWidth: 16, // 每个图例的高度
-          itemGap: 30, // 图例每项之间的间隔
+          itemGap: 20, // 图例每项之间的间隔
+          textStyle: {
+            color: '#fft' // 表示 label 的文字的颜色跟随色块
+          },
           emphasis: {
             selectorLabel: {
               backgroundColor: '#ff00ff'
@@ -76,27 +80,12 @@ export default {
             let tarValue = 0
             for (let i = 0, l = data.length; i < l; i++) {
               total += data[i].value
-              if (data[i].name === name) {
-                tarValue = data[i].value
-              }
+              if (data[i].name === name) tarValue = data[i].value
             }
             const p = ((tarValue / total) * 100).toFixed(0)
             return name + ' ' + ' ' + p + '%'
           },
-          data: [
-            {
-              name: '直接访问',
-              textStyle: {
-                color: '#00ffff',
-                backgroundColor: '#ccc',
-                padding: [20, 10]
-              }
-            },
-            '邮件营销',
-            '联盟广告',
-            '视频广告',
-            '搜索引擎'
-          ]
+          data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
         },
         series: [
           {
@@ -104,16 +93,21 @@ export default {
             type: 'pie',
             radius: ['50%', '70%'],
             avoidLabelOverlap: false,
+            emphasis: {
+              show: true,
+              textStyle: {
+                fontSize: '30',
+                fontWeight: 'bold'
+              }
+            },
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 10,
+              borderRadius: 10
+            },
             label: {
               show: false,
-              position: 'center',
-              emphasis: {
-                show: true,
-                textStyle: {
-                  fontSize: '30',
-                  fontWeight: 'bold'
-                }
-              }
+              position: 'center'
             },
             labelLine: { show: false },
             data: [

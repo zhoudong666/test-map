@@ -1,18 +1,15 @@
 export default {
   // 限制只能输入数字(可以输入两位小数点)
   limitInputPointNumber(val) {
-    if (val === 0 || val === "0" || val === "" || val === undefined) {
-      return "";
+    if (val === 0 || val === '0' || val === '' || val === undefined) {
+      return ''
     } else {
-      let value = null;
-      value = val.replace(/[^\d.]/g, ""); // 清除“数字”和“.”以外的字符
-      value = value.replace(/\.{2,}/g, "."); // 只保留第一个. 清除多余的
-      value = value
-        .replace(".", "$#$")
-        .replace(/\./g, "")
-        .replace("$#$", ".");
-      value = value.replace(/^(-)*(\d+)\.(\d\d).*$/, "$1$2.$3"); // 只能输入两个小数
-      return value;
+      let value = null
+      value = val.replace(/[^\d.]/g, '') // 清除“数字”和“.”以外的字符
+      value = value.replace(/\.{2,}/g, '.') // 只保留第一个. 清除多余的
+      value = value.replace('.', '$#$').replace(/\./g, '').replace('$#$', '.')
+      value = value.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3') // 只能输入两个小数
+      return value
     }
   },
 
@@ -26,7 +23,7 @@ export default {
       }
       newMatch.push(item)
     })
-    newMatch = newMatch.map(item => {
+    newMatch = newMatch.map((item) => {
       return `/${item}`
     })
     return newMatch
@@ -40,7 +37,7 @@ export default {
       nW: '[0-9]',
       sW: '[\\u0020-\\u002F\\u003A-\\u0040\\u005B-\\u0060\\u007B-\\u007E]'
     }
-    function Reg (str, rStr) {
+    function Reg(str, rStr) {
       var reg = new RegExp(rStr)
       if (reg.test(str)) return true
       else return false
@@ -70,7 +67,7 @@ export default {
   phoneReg: /^1[3|4|5|6|7|8][0-9]{9}$/,
 
   // 格式化金钱
-  formatUSD (val, currency) {
+  formatUSD(val, currency) {
     if (val === '' || val === '--' || val === undefined) {
       return '--'
     }
@@ -81,7 +78,7 @@ export default {
       newVal = Number(newVal).toLocaleString()
       newVal = this.unFormatAmount(newVal)
     }
-    let dotIdx = newVal.lastIndexOf('.')
+    const dotIdx = newVal.lastIndexOf('.')
     let dotVal = '.00' // 保留小数点后面的数据
     if (dotIdx >= 0) {
       dotVal = newVal.substr(dotIdx, newVal.length)
@@ -89,7 +86,7 @@ export default {
     }
 
     let len = newVal.length
-    let arr = []
+    const arr = []
     let lastIndex = null
     while (len > 0) {
       lastIndex = len
@@ -108,7 +105,7 @@ export default {
   },
 
   // 格式化金额数字，不包含小数点，金额符等 输入整数
-  formatAmount (val) {
+  formatAmount(val) {
     if (val === '' || val === '--' || val === undefined) {
       return '--'
     }
@@ -117,7 +114,7 @@ export default {
     }
     // 先判断数据是否有小数点
     let newVal = String(val)
-    let dotIdx = newVal.lastIndexOf('.')
+    const dotIdx = newVal.lastIndexOf('.')
     let dotLength = 0
     if (newVal.split('.').length > 1) {
       dotLength = newVal.split('.')[1].length
@@ -129,7 +126,7 @@ export default {
       newVal = newVal.slice(0, dotIdx)
     }
     let len = newVal.length
-    let arr = []
+    const arr = []
     let lastIndex = null
     while (len > 0) {
       lastIndex = len
@@ -144,7 +141,7 @@ export default {
   },
 
   // 判断数据是否为空
-  isEmptyVal (val) {
+  isEmptyVal(val) {
     if (val === undefined || val === '') {
       return '--'
     } else {
@@ -152,9 +149,9 @@ export default {
     }
   },
 
-    // 格式化年月日   type: 中国显示方式(ch)及拼接的方式
+  // 格式化年月日   type: 中国显示方式(ch)及拼接的方式
   // 注: 只有在接口传参时才需要中国的显示方式,其它为美式
-  formatYMD (now, type='ch') {
+  formatYMD(now, type = 'ch') {
     if (!now || now === 'null' || now === '--' || now === undefined) {
       return '--'
     }
@@ -198,13 +195,13 @@ export default {
   },
 
   // 格式化时间 年，月，日，时，分，秒
-  formatDate (now, type) {
+  formatDate(now, type) {
     if (!now || now === 'null' || now === '--' || now === undefined) {
       return '--'
     }
     if (now) {
       now = new Date(now)
-      let year = now.getFullYear()
+      const year = now.getFullYear()
       let month = now.getMonth() + 1
       let date = now.getDate()
       let hour = now.getHours()
@@ -236,31 +233,34 @@ export default {
   },
 
   // 验证上传的文件类型，是否为pdf
-  isPdfType (file) {
+  isPdfType(file) {
     const fileType = file.type
     if (fileType.lastIndexOf('/pdf') > 0) {
       return true
     }
     return false
   },
-  
+
   // 验证上传的文件类型，是否为png/jpeg/gif等
-  isPictureType (file) {
+  isPictureType(file) {
     const fileType = file.type
-    if (fileType.lastIndexOf('/jpeg') > 0 || fileType.lastIndexOf('/png') > 0 || fileType.lastIndexOf('/x-icon') > 0 || fileType.lastIndexOf('/gif') >= 0) {
+    if (
+      fileType.lastIndexOf('/jpeg') > 0 ||
+      fileType.lastIndexOf('/png') > 0 ||
+      fileType.lastIndexOf('/x-icon') > 0 ||
+      fileType.lastIndexOf('/gif') >= 0
+    ) {
       return true
     }
     return false
   },
 
   // 验证上传的文件大小,小于4m
-  isLimitFile (file, size = 4) {
+  isLimitFile(file, size = 4) {
     const isLtM = file.size / 1024 / 1024 < size
     if (isLtM) {
       return true
     }
     return false
-  },
-
-
+  }
 }
