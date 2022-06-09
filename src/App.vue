@@ -4,8 +4,8 @@
       <router-link to="/">Home</router-link> | <router-link to="/about">About</router-link> |
       <router-link to="/barChart">barChart</router-link> |
       <router-link to="/pictorialBarChart">pictorialBarChart</router-link> |
-      <router-link to="/pieChart">pieChart</router-link> |
-      <router-link to="/gaugeChart">gaugeChart</router-link>
+      <router-link to="/pieChart">pieChart</router-link> | <router-link to="/gaugeChart">gaugeChart</router-link>|
+      <router-link to="/percentGuage">percentGuage</router-link>
     </div>
     <router-view />
   </div>

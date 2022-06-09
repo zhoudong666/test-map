@@ -37,6 +37,11 @@ const routes = [
     path: '/gaugeChart',
     name: 'gaugeChart',
     component: () => import('../views/gaugeChart.vue')
+  },
+  {
+    path: '/percentGuage',
+    name: 'percentGuage',
+    component: () => import('../views/percentGuage.vue')
   }
 ]
 
